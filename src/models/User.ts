@@ -25,16 +25,20 @@ class User {
       updated_at: now,
     };
     const [createdUser] = await knex<IUser>("users").insert(newUser).returning("*");
-    //checagem de criação de usuário
     if (!createdUser) {
       throw new Error("Erro ao criar usuário");
     }
     return createdUser;
   }
 
-  async findOne(query: IUserQuery): Promise<IUser | undefined> {
-    return await knex<IUser>("users").where(query).first();
+  async findOne(query: IUserQuery): Promise<IUser> {
+    const user = await knex<IUser>("users").where(query).first();
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+    return user;
   }
+
 }
 
 export default new User();
