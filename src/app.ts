@@ -1,5 +1,7 @@
 import fastify from 'fastify'
 import { usersRoutes } from './routes/users'
+import { professionalRoutes } from './routes/professional'
+import { categoryRoutes } from './routes/category'
 import fastifyCookie from '@fastify/cookie'
 
 const app = fastify()
@@ -9,5 +11,14 @@ app.register(fastifyCookie)
 app.register(usersRoutes, {
   prefix: 'users',
 })
+
+app.register(categoryRoutes, {
+  prefix: 'category',
+})
+
+app.register(usersRoutes, {
+  prefix: 'professional',
+})
+
 
 export default app

@@ -8,7 +8,13 @@ export const config: Knex.Config = {
       ? {
           filename: env.DATABASE_URL,
         }
-      : env.DATABASE_URL,
+      : {
+        host: env.DATABASE_HOST,
+        port: env.DATABASE_PORT,
+        user: env.DATABASE_USER,
+        database: env.DATABASE_NAME,
+        password: env.DATABASE_PASSWORD,
+      },
   useNullAsDefault: true,
   migrations: {
     extension: 'ts',
