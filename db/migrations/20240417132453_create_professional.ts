@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('phoneNumber').unique().notNullable();
     table.text('description').notNullable();
     table.integer('userId').unsigned().notNullable();
+    table.timestamps(true, true);
     table.foreign('userId').references('id').inTable('users').onDelete('CASCADE');
   });
 }

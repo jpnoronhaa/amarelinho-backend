@@ -32,11 +32,9 @@ class User {
   }
 
   async findOne(query: IUserQuery): Promise<IUser> {
-    const user = await knex<IUser>("users").where(query).first();
-    if (!user) {
-      throw new Error("Usuário não encontrado");
-    }
-    return user;
+    return knex("users").where(query)
+      .select("id", "name", "email", "isActive", "created_at", "updated_at")
+      .first();
   }
 
 }
