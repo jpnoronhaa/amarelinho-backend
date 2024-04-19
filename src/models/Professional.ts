@@ -33,7 +33,6 @@ class Professional {
     const now = new Date();
     const newProfessional = {
       ...professional,
-      categories: undefined,
       created_at: now,
       updated_at: now,
     }
@@ -50,7 +49,7 @@ class Professional {
     
     const [name, email, password, isActive] = await knex('users').where({ id: professional.userId }).select('name', 'email', 'password', 'isActive')
     
-    const createdProfessional = { ...newProfessional, id, name, email, password, isActive };
+    const createdProfessional = { ...newProfessional, categories: professional.categories as unknown as ICategory[], id, name, email, password, isActive };
 
     return createdProfessional;
   }
