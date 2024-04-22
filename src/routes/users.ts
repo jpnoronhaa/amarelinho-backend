@@ -1,7 +1,5 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import  UserService  from '../services/UserService';
-import { IUser } from '../models/User';
-import { format } from 'path';
+import { FastifyInstance } from 'fastify';
+import UserController from '../controller/UserController';
 
 const userSchema = {
   type: 'object',
@@ -27,19 +25,9 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         body: userSchema,
       },
-      handler: async (request: FastifyRequest<{ Body: IUser }>, reply: FastifyReply) => {
-        try {
-          const user = request.body;
-          const createdUser = await UserService.create(user);
-          return reply.code(201).send({ "message": "Usuário criado com sucesso", "user": createdUser });
-        }
-        catch (error) {
-          if (error.message === 'Email já cadastrado') {
-            return reply.code(409).send({"message": error.message});
-          }
-          return reply.code(400).send({"message": error.message});
-        }
-      }
+      handler: UserController.register,
     }
   );
+
+  app.post('/login', UserController.login); 
 }
