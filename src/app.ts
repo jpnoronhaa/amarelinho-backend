@@ -4,6 +4,12 @@ import { professionalRoutes } from './routes/professional'
 import { categoryRoutes } from './routes/category'
 import fastifyCookie from '@fastify/cookie'
 import { reviewRoutes } from './routes/review'
+import admin from 'firebase-admin';
+import serviceAccount from '../serviceAccountKey.json';
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
+});
 
 const app = fastify()
 

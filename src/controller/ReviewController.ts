@@ -1,11 +1,38 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+import admin from 'firebase-admin';
+import sendReviewNotification from './NotificationController';
 import Review, { ICreateReview, IUpdateReview } from '../models/Review';
+import Professional from '../models/Professional';
 
 class ReviewController {
     createReview = async (req: FastifyRequest<{ Body: ICreateReview }>, res: FastifyReply) => {
         try {
             const review = req.body;
             const createdReview = await Review.create(review);
+
+            const professional = await Professional.findOne(req.body.professional_id);
+            const deviceToken = professional?.notificationToken;
+
+            if (deviceToken) {
+                const payload: admin.messaging.Message = {
+                    token: deviceToken,
+                    notification: {
+                      title: 'Nova Avaliação Recebida!!!',
+                      body: createdReview.comment
+                    },
+                    data: {
+                      reviewId: createdReview.id ? createdReview.id.toString() : ''
+                    }
+                };
+            
+                try {
+                    await admin.messaging().send(payload);
+                    console.log("Mensagem enviada com sucesso");
+                } catch (error) {
+                    console.log('Erro ao enviar notificação', error);
+                }
+            }
+
             return res.code(201).send({ message: 'Avaliação criada com sucesso', review: createdReview });
         } catch (error) {
             return res.code(400).send({ message: error.message });
