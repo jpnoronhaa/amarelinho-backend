@@ -3,16 +3,18 @@ import multer from "fastify-multer";
 import UserImagesController from "../controller/UserImagesController";
 import {  DeleteImageRequest } from "../controller/UserImagesController";
 
+const storage = multer.memoryStorage();
+
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Tipo de arquivo inválido'), false);
+    cb(new Error('Tipo de arquivo inválido. Apenas imagens são permitidas'), false);
   }
 };
 
 const upload = multer({
-  dest: 'uploads/',
+  storage,
   limits: { fileSize: 2 * 1024 * 1024 }, // max: 2MB
   fileFilter
 });

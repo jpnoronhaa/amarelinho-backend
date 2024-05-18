@@ -5,15 +5,10 @@ import { categoryRoutes } from './routes/category'
 import fastifyCookie from '@fastify/cookie'
 import { reviewRoutes } from './routes/review'
 import { userImagesRoutes } from './routes/UserImages'
-import admin from 'firebase-admin';
-import serviceAccount from '../serviceAccountKey.json';
 import fastifyMultipart from "@fastify/multipart";
+import bucket from './firebase';
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
-});
-
-const app = fastify();
+const app = fastify({ logger: true });
 
 app.register(fastifyCookie);
 
