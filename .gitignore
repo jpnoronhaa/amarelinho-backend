@@ -170,3 +170,4 @@ build
 .vscode/
 # End of https://www.toptal.com/developers/gitignore/api/yarn
 serviceAccountKey.json
+uploads/

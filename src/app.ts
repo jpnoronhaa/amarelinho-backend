@@ -4,18 +4,19 @@ import { professionalRoutes } from './routes/professional'
 import { categoryRoutes } from './routes/category'
 import fastifyCookie from '@fastify/cookie'
 import { reviewRoutes } from './routes/review'
+import { userImagesRoutes } from './routes/UserImages'
+import fastifyMultipart from "@fastify/multipart";
+import bucket from './firebase';
 import { chatRoutes } from './routes/chatRoutes'
 import { userImagesRoutes } from './routes/userImages'
 import admin from 'firebase-admin';
 import serviceAccount from '../serviceAccountKey.json';
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
-});
+const app = fastify({ logger: true });
 
-const app = fastify()
+app.register(fastifyCookie);
 
-app.register(fastifyCookie)
+app.register(fastifyMultipart);
 
 app.register(usersRoutes, {
   prefix: 'users',
@@ -33,12 +34,12 @@ app.register(reviewRoutes, {
   prefix: 'review',
 })
 
+app.register(userImagesRoutes, {
+  prefix: 'user_images',
+})
+
 app.register(chatRoutes, {
   prefix: 'chat',
 })
-
-app.register(userImagesRoutes, {
-  prefix: 'userImages',
-});
 
 export default app
