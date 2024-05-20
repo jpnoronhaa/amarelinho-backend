@@ -9,6 +9,9 @@ import fastifyMultipart from "@fastify/multipart";
 import bucket from './firebase';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import { chatRoutes } from './routes/chatRoutes';
+import admin from 'firebase-admin';
+import serviceAccount from '../serviceAccountKey.json';
 
 const app = fastify({ logger: true });
 
@@ -39,6 +42,10 @@ app.register(reviewRoutes, {
 
 app.register(userImagesRoutes, {
   prefix: 'user_images',
+})
+
+app.register(chatRoutes, {
+  prefix: 'chat',
 })
 
 export default app
