@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import UserImages, { IUserImage } from "../models/UserImages";
+import UserImages from "../models/UserImages";
 import bucket from "../firebase";
 import { Readable } from 'stream';
 import path from 'path';
@@ -169,6 +169,36 @@ class UserImagesController {
       console.error("Error deleting image:", error);
       return res.code(500).send({
         message: "Internal Server Error: Failed to delete image",
+      });
+    }
+  };
+
+  public getImages = async (
+    req: FastifyRequest<{ Querystring: { user_id: number } }>,
+    res: FastifyReply
+  ) => {
+    try {
+      const { user_id } = req.query;
+
+      if (!user_id) {
+        return res.code(400).send({
+          message: "Request inválido: user_id é obrigatório",
+        });
+      }
+
+      const image = await this.userImagesModel.findOne({ user_id });
+
+      if (!image) {
+        return res.code(404).send({
+          message: "Imagem não encontrada",
+        });
+      }
+
+      return res.code(200).send(image);
+    } catch (error) {
+      console.error("Erro ao buscar imagem:", error);
+      return res.code(500).send({
+        message: "Erro interno do servidor: Falha ao buscar imagem",
       });
     }
   };
