@@ -19,9 +19,31 @@ app.register(fastifyCookie);
 
 app.register(fastifyMultipart);
 
-app.register(fastifySwagger);
+app.register(fastifySwagger, {
+  openapi: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Amarelinho API',
+      description: 'API para o projeto Amarelinho',
+      version: '1.0.0',
+    },
+    tags: [
+      { name: 'Users', description: 'Operações relacionadas a usuários' },
+      { name: 'Categories', description: 'Operações relacionadas a categorias' },
+      { name: 'Professionals', description: 'Operações relacionadas a profissionais' },
+      { name: 'Reviews', description: 'Operações relacionadas a revisões' },
+      { name: 'User Images', description: 'Operações relacionadas a imagens de usuários' },
+      { name: 'Chat', description: 'Operações relacionadas a chat' },
+    ],
+    externalDocs: {
+      description: 'Repositório no GitHub',
+      url: 'https://github.com/rafaeld74/Amarelinho-PS'
+    }
+  }
+});
+
 app.register(fastifySwaggerUi, {
-  prefix: '/docs',
+  routePrefix: '/docs',
 });
 
 app.register(usersRoutes, {
