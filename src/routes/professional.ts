@@ -7,6 +7,10 @@ export async function professionalRoutes(app: FastifyInstance) {
   );
 
   app.get(
+    '/rated/', ProfessionalController.findBestProfessionals,
+  );
+
+  app.get(
     '/:id', ProfessionalController.findOneProfessional,
   );
 
