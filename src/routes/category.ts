@@ -11,11 +11,32 @@ export async function categoryRoutes(app: FastifyInstance) {
   );
 
   app.post(
-    '/', CategoryController.createCategory,
-  );
+    '/', { 
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            description: { type: 'string' },
+          },
+          required: ['name'],
+        },
+      },
+      handler: CategoryController.createCategory,
+  });
 
   app.put(
-    '/:id', CategoryController.updateCategory,
+    '/:id', {
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            description: { type: 'string' },
+          },
+        },
+      },
+      handler: CategoryController.updateCategory,}
   );
 
   app.delete(

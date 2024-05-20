@@ -34,10 +34,16 @@ class UserImages {
   }
 
   async findOne(query: IUserImageQuery): Promise<IUserImage | null> {
-    return knex("user_images")
+    console.log("query:", query); // Adicione este log
+
+    const result = await knex("user_images")
       .where(query)
       .select("id", "user_id", "image_path", "created_at", "updated_at")
       .first();
+
+    console.log("result:", result); // Adicione este log
+
+    return result;
   }
 
   async update(id: number, updateData: Partial<IUserImage>): Promise<IUserImage | null> {
