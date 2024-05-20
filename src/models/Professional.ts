@@ -6,6 +6,7 @@ export interface ICreateProfessional {
   phoneNumber: number;
   description: string;
   categories?: number[];
+  notificationToken?: string;
 }
 
 export interface IProfessional {
@@ -17,6 +18,7 @@ export interface IProfessional {
   isActive: boolean;
   phoneNumber: number;
   description: string;
+  notificationToken?: string;
   categories?: ICategory[];
   created_at: Date;
   updated_at: Date;

@@ -6,6 +6,12 @@ import fastifyCookie from '@fastify/cookie'
 import { reviewRoutes } from './routes/review'
 import { chatRoutes } from './routes/chatRoutes'
 import { userImagesRoutes } from './routes/userImages'
+import admin from 'firebase-admin';
+import serviceAccount from '../serviceAccountKey.json';
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
+});
 
 const app = fastify()
 
