@@ -4,6 +4,8 @@ import { professionalRoutes } from './routes/professional'
 import { categoryRoutes } from './routes/category'
 import fastifyCookie from '@fastify/cookie'
 import { reviewRoutes } from './routes/review'
+import { chatRoutes } from './routes/chatRoutes'
+import { userImagesRoutes } from './routes/userImages'
 import admin from 'firebase-admin';
 import serviceAccount from '../serviceAccountKey.json';
 
@@ -30,5 +32,13 @@ app.register(professionalRoutes, {
 app.register(reviewRoutes, {
   prefix: 'review',
 })
+
+app.register(chatRoutes, {
+  prefix: 'chat',
+})
+
+app.register(userImagesRoutes, {
+  prefix: 'userImages',
+});
 
 export default app
