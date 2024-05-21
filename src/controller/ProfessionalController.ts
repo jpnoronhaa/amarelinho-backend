@@ -15,7 +15,17 @@ class ProfessionalController {
 
     findAllProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
         try {
+            const professionals = await Professional.findSortedByRating();
+            res.send(professionals);
+        } catch (error) {
+            res.status(500).send('Erro ao recuperar os profissionais');
+        }
+    }
+
+    findBestProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
+        try {
             const professionals = await Professional.findAll();
+            
             res.send(professionals);
         } catch (error) {
             res.status(500).send('Erro ao recuperar os profissionais');

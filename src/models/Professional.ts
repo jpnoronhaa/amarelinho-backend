@@ -6,6 +6,7 @@ export interface ICreateProfessional {
   phoneNumber: number;
   description: string;
   categories?: number[];
+  notificationToken?: string;
 }
 
 export interface IProfessional {
@@ -17,6 +18,7 @@ export interface IProfessional {
   isActive: boolean;
   phoneNumber: number;
   description: string;
+  notificationToken?: string;
   categories?: ICategory[];
   created_at: Date;
   updated_at: Date;
@@ -82,7 +84,7 @@ class Professional {
  
  async findAll(): Promise<IProfessional[]> {
     return await knex('professional')
-    .join('users', 'users.id', 'professionals.userId')
+    .join('users', 'users.id', 'professional.userId')
     .select(
       'professional.id',
       'professional.phoneNumber',
@@ -92,14 +94,13 @@ class Professional {
       'users.id as userId',
       'users.name',
       'users.email',
-      'users.password',
       'users.isActive',
     )
   }
 
   async findOne(id: number): Promise<IProfessional | undefined> {
     return knex('professional').where({ id })
-    .join('users', 'users.id', 'professionals.userId')
+    .join('users', 'users.id', 'professional.userId')
     .select(
       'professional.id',
       'professional.phoneNumber',
@@ -109,7 +110,6 @@ class Professional {
       'users.id as userId',
       'users.name',
       'users.email',
-      'users.password',
       'users.isActive',
     ).first();
   }
@@ -142,6 +142,22 @@ class Professional {
       return true;
     }
     return deletedRows > 0;
+  }
+
+  async findSortedByRating(): Promise<IProfessional[]> {
+    const professionals = await knex<IProfessional>('professionals').select('*');
+    const reviews = await knex('reviews').select('professional_id').avg('rating as average_rating').groupBy('professional_id');
+
+    const professionalRatings = {};
+    reviews.forEach(review => {
+      professionalRatings[review.professional_id] = review.average_rating;
+    });
+
+    return professionals.sort((a, b) => {
+      const ratingA = professionalRatings[a.id] || 0;
+      const ratingB = professionalRatings[b.id] || 0;
+      return ratingB - ratingA;
+    });
   }
 }
 
