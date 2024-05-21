@@ -143,6 +143,22 @@ class Professional {
     }
     return deletedRows > 0;
   }
+
+  async findSortedByRating(): Promise<IProfessional[]> {
+    const professionals = await knex<IProfessional>('professionals').select('*');
+    const reviews = await knex('reviews').select('professional_id').avg('rating as average_rating').groupBy('professional_id');
+
+    const professionalRatings = {};
+    reviews.forEach(review => {
+      professionalRatings[review.professional_id] = review.average_rating;
+    });
+
+    return professionals.sort((a, b) => {
+      const ratingA = professionalRatings[a.id] || 0;
+      const ratingB = professionalRatings[b.id] || 0;
+      return ratingB - ratingA;
+    });
+  }
 }
 
 export default new Professional();

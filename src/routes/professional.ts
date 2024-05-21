@@ -33,6 +33,10 @@ export async function professionalRoutes(app: FastifyInstance) {
     }
   }, ProfessionalController.findAllProfessionals);
 
+  app.get(
+    '/rated/', ProfessionalController.findBestProfessionals,
+  );
+  
   app.get('/:id', {
     schema: {
       summary: 'Obtém um profissional específico pelo ID',
