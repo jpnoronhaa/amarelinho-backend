@@ -84,7 +84,7 @@ class Professional {
  
  async findAll(): Promise<IProfessional[]> {
     return await knex('professional')
-    .join('users', 'users.id', 'professionals.userId')
+    .join('users', 'users.id', 'professional.userId')
     .select(
       'professional.id',
       'professional.phoneNumber',
@@ -94,14 +94,13 @@ class Professional {
       'users.id as userId',
       'users.name',
       'users.email',
-      'users.password',
       'users.isActive',
     )
   }
 
   async findOne(id: number): Promise<IProfessional | undefined> {
     return knex('professional').where({ id })
-    .join('users', 'users.id', 'professionals.userId')
+    .join('users', 'users.id', 'professional.userId')
     .select(
       'professional.id',
       'professional.phoneNumber',
@@ -111,7 +110,6 @@ class Professional {
       'users.id as userId',
       'users.name',
       'users.email',
-      'users.password',
       'users.isActive',
     ).first();
   }
