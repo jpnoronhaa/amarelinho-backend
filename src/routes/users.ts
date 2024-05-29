@@ -20,6 +20,15 @@ const loginSchema = {
   required: ['email', 'password'],
 };
 
+const notificationTokenSchema = {
+  type: 'object',
+  properties: {
+    userId: { type: 'number' },
+    notificationToken: { type: 'string' },
+  },
+  required: ['userId', 'notificationToken'],
+};
+
 export async function usersRoutes(app: FastifyInstance) {
   app.post('/register', {
     schema: {
@@ -67,11 +76,10 @@ export async function usersRoutes(app: FastifyInstance) {
           description: 'Login realizado com sucesso',
           type: 'object',
           properties: {
-            message: { type: 'string' },
             token: { type: 'string' }
           }
         },
-        400: {
+        401: {
           description: 'Credenciais inválidas',
           type: 'object',
           properties: {
@@ -81,5 +89,30 @@ export async function usersRoutes(app: FastifyInstance) {
       }
     },
     handler: UserController.login,
+  });
+
+  app.post('/notification-token', {
+    schema: {
+      summary: 'Atualiza o token de notificação do usuário',
+      tags: ['Users'],
+      body: notificationTokenSchema,
+      response: {
+        200: {
+          description: 'Token de notificação atualizado com sucesso',
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        },
+        400: {
+          description: 'Erro ao atualizar token de notificação',
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
+      }
+    },
+    handler: UserController.registerNotificationToken,
   });
 }
