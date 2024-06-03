@@ -1,6 +1,15 @@
-import app from './app'
-import { env } from './env'
+import fastify from 'fastify'
 
-app.listen({ port: env.PORT }).then(() => {
-  console.log('HTTP server listening on port ' + env.PORT)
+const server = fastify()
+
+server.get('/', async (request, reply) => {
+  return { hello: 'world' }
+})
+
+server.listen(env.PORT, (err, address) => {
+  if (err) {
+    console.error(err)
+    process.exit(1)
+  }
+  console.log(`Server listening at ${address}`)
 })
