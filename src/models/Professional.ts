@@ -34,18 +34,22 @@ export interface IUpdateProfessional {
 class Professional {
   async create(professional: ICreateProfessional): Promise<IProfessional> {
     const now = new Date();
+    const categories = professional.categories;
+
+    delete professional.categories;
     const newProfessional = {
       ...professional,
       created_at: now,
       updated_at: now,
     }
-    const [id] = await knex('professional').insert(newProfessional).returning('id');
-    
-    const associations = professional.categories?.map(categoryId => ({
+
+    const [{id}] = await knex('professional').insert(newProfessional).returning('id');
+
+    const associations = categories?.map(categoryId => ({
       professional_id: id,
       category_id: categoryId,
     }));
-    
+
     if (associations) {
       await knex('professionals_categories').insert(associations);
     }
@@ -59,7 +63,7 @@ class Professional {
 
   async getProfessionalWithCategories(professionalId: number): Promise<IProfessional> {
     const professional: IProfessional = await knex('professional')
-      .join('users', 'users.id', 'professionals.userId')
+      .join('users', 'users.id', 'professional.userId')
       .where('id', professionalId)
       .select(
         'professional.id',
