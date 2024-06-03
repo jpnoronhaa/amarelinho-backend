@@ -65,6 +65,16 @@ class ProfessionalController {
             reply.status(500).send('Erro ao deletar profissional');
         }
     }
+
+    professionalsRecommendations = async (req: FastifyRequest, res: FastifyReply) => {
+        try {
+            const { id } = req.params;
+            const recommendations = Professional.getRecommendedProfessionals(id);
+            res.send(recommendations);
+        } catch (error) {
+            res.status(500).send('Erro ao recomendar profissionais');
+        }
+    }
 }
 
 export default new ProfessionalController();

@@ -1,4 +1,5 @@
 import { knex } from '../database';
+import { buildSimilarityGraph } from '../utils/recommendations';
 import { ICategory } from "./Category";
 
 export interface ICreateProfessional {
@@ -159,6 +160,21 @@ class Professional {
       return ratingB - ratingA;
     });
   }
+
+  async getRecommendedProfessionals (professionalId: string): Promise<string[]> {
+    const graph = await buildSimilarityGraph();
+    const similarProfessionals = graph[professionalId];
+    
+    if (!similarProfessionals) {
+      return [];
+    }
+  
+    const sortedProfessionals = Object.entries(similarProfessionals)
+      .sort(([, similarityA], [, similarityB]) => similarityB - similarityA)
+      .map(([id]) => id);
+  
+    return sortedProfessionals;
+  };
 }
 
 export default new Professional();
