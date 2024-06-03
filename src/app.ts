@@ -12,12 +12,21 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import { chatRoutes } from './routes/chatRoutes';
 import admin from 'firebase-admin';
 import serviceAccount from '../serviceAccountKey.json';
+import { fastifyWebsocket } from '@fastify/websocket';
 
 const app = fastify({ logger: true });
 
 app.register(fastifyCookie);
 
 app.register(fastifyMultipart);
+
+/*app.register(fastifyWebsocket);*/
+
+app.register(require("@fastify/websocket"), {
+  options: {
+    path: "/chat/ws"
+  }
+});
 
 app.register(fastifySwagger, {
   openapi: {
@@ -46,28 +55,11 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 });
 
-app.register(usersRoutes, {
-  prefix: 'users',
-})
-
-app.register(categoryRoutes, {
-  prefix: 'category',
-})
-
-app.register(professionalRoutes, {
-  prefix: 'professional',
-})
-
-app.register(reviewRoutes, {
-  prefix: 'review',
-})
-
-app.register(userImagesRoutes, {
-  prefix: 'user_images',
-})
-
-app.register(chatRoutes, {
-  prefix: 'chat',
-})
+app.register(usersRoutes, { prefix: 'users' });
+app.register(categoryRoutes, { prefix: 'category' });
+app.register(professionalRoutes, { prefix: 'professional' });
+app.register(reviewRoutes, { prefix: 'review' });
+app.register(userImagesRoutes, { prefix: 'user_images' });
+app.register(chatRoutes, { prefix: 'chat' });
 
 export default app

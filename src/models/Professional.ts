@@ -145,7 +145,7 @@ class Professional {
   }
 
   async findSortedByRating(): Promise<IProfessional[]> {
-    const professionals = await knex<IProfessional>('professionals').select('*');
+    const professionals = await knex<IProfessional>('professional').select('*');
     const reviews = await knex('reviews').select('professional_id').avg('rating as average_rating').groupBy('professional_id');
 
     const professionalRatings = {};
