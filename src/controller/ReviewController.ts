@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import sendReviewNotification from './NotificationController';
 import Review, { ICreateReview, IUpdateReview } from '../models/Review';
 import Professional from '../models/Professional';
@@ -33,7 +33,7 @@ class ReviewController {
                 }
             }
 
-            return res.code(201).send({ message: 'Avaliação criada com sucesso', review: createdReview });
+            return res.code(201).send(JSON.stringify({ message: 'Avaliação criada com sucesso', review: createdReview }));
         } catch (error) {
             return res.code(400).send({ message: error.message });
         }

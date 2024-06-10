@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import User, { IUser } from "../models/User";
 import { env } from '../env';
 
@@ -65,6 +65,16 @@ class UserController {
             return res.code(200).send({ message: 'Token de notificação atualizado com sucesso' });
         } catch (error) {
             return res.code(400).send({ message: 'Erro ao atualizar token de notificação' });
+        }
+    }
+
+    getUserById = async (req: FastifyRequest<{ Params: { id: number } }>, res: FastifyReply) => {
+        const userId = req.params.id;
+        try {
+            const user = await User.findOne({ id: userId });
+            return res.code(200).send(user);
+        } catch (error) {
+            return res.code(400).send({ message: 'Erro ao buscar usuário' });
         }
     }
 }
