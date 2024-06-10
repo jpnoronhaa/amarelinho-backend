@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import UserImages from "../models/UserImages";
 import bucket from "../firebase";
 import { Readable } from 'stream';
-import path from 'path';
+import * as path from 'path';
 
 export interface MulterFile {
   buffer: Buffer;

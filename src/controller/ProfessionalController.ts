@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import Professional from '../models/Professional'
 import { IProfessional, ICreateProfessional, IUpdateProfessional } from "../models/Professional";
+import { formatProfessional } from "../utils/formatProfessional";
 
 class ProfessionalController {
     createProfessional = async (req: FastifyRequest<{ Body: ICreateProfessional }>, res: FastifyReply) => {
@@ -20,8 +21,9 @@ class ProfessionalController {
 
     findAllProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            const professionals = await Professional.findSortedByRating();
-            return res.send(professionals);
+            const professionals = await Professional.findAll();
+            const formattedProfessionals = professionals.map(formatProfessional);
+            return res.header('Content-Type', 'application/json').send(JSON.stringify(formattedProfessionals));
         } catch (error) {
             return res.status(500).send('Erro ao recuperar os profissionais');
         }
@@ -29,8 +31,9 @@ class ProfessionalController {
 
     findBestProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            const professionals = await Professional.findAll();
-            return res.send(professionals);
+            const professionals = await Professional.findSortedByRating();
+            const formattedProfessionals = professionals.map(formatProfessional);
+            return res.header('Content-Type', 'application/json').send(JSON.stringify(formattedProfessionals));
         } catch (error) {
             return res.status(500).send('Erro ao recuperar os profissionais');
         }
@@ -41,7 +44,8 @@ class ProfessionalController {
             const id = req.params.id;
             const professional = await Professional.findOne(id);
             if (professional) {
-                return res.send(professional);
+                const response = formatProfessional(professional);
+                return res.header('Content-Type', 'application/json').send(JSON.stringify(response));;
             } else {
                 return res.status(404).send('Profissional não encontrado!');
             }

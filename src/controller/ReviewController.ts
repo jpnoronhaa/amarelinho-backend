@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import sendReviewNotification from './NotificationController';
 import Review, { ICreateReview, IUpdateReview } from '../models/Review';
 import Professional from '../models/Professional';

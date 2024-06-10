@@ -55,16 +55,13 @@ export async function professionalRoutes(app: FastifyInstance) {
             userId: { type: 'number' },
             name: { type: 'string' },
             email: { type: 'string' },
-            password: { type: 'string' },
             isActive: { type: 'boolean' },
             phoneNumber: { type: 'number' },
             description: { type: 'string' },
             categories: {
               type: 'array',
               items: { type: 'object' }
-            },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' }
+            }
           }
         }
       }
