@@ -7,7 +7,12 @@ class ProfessionalController {
         try {
             const professional = req.body;
             const createdProfessional = await Professional.create(professional);
-            return res.code(201).send({ message: 'Profissional com sucesso', professional: createdProfessional });
+
+            const stringify = JSON.stringify({
+                message: 'Profissional criado com sucesso, id:' + createdProfessional.id,
+                professional: createdProfessional
+            });
+            return res.code(201).send(stringify);
         } catch (error) {
             return res.code(400).send({ message: error.message });
         }
@@ -16,19 +21,18 @@ class ProfessionalController {
     findAllProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const professionals = await Professional.findSortedByRating();
-            res.send(professionals);
+            return res.send(professionals);
         } catch (error) {
-            res.status(500).send('Erro ao recuperar os profissionais');
+            return res.status(500).send('Erro ao recuperar os profissionais');
         }
     }
 
     findBestProfessionals = async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const professionals = await Professional.findAll();
-            
-            res.send(professionals);
+            return res.send(professionals);
         } catch (error) {
-            res.status(500).send('Erro ao recuperar os profissionais');
+            return res.status(500).send('Erro ao recuperar os profissionais');
         }
     }
 
@@ -37,12 +41,12 @@ class ProfessionalController {
             const id = req.params.id;
             const professional = await Professional.findOne(id);
             if (professional) {
-                res.send(professional);
+                return res.send(professional);
             } else {
-                res.status(404).send('Profissional não encontrado!');
+                return res.status(404).send('Profissional não encontrado!');
             }
         } catch (error) {
-            res.status(500).send('Erro ao recuperar o profissional');
+            return res.status(500).send('Erro ao recuperar o profissional');
         }
     }
 
@@ -50,9 +54,9 @@ class ProfessionalController {
         try {
             const id = request.params.id
             await Professional.update(id, request.body);
-            reply.send('Profissional atualizado com sucesso!');
+            return reply.send('Profissional atualizado com sucesso!');
         } catch (error) {
-            reply.status(500).send('Erro ao atualizar profissional');
+            return reply.status(500).send('Erro ao atualizar profissional');
         }
     }
     
@@ -60,15 +64,15 @@ class ProfessionalController {
         try {
             const id = request.params.id
             await Professional.delete(id);
-            reply.send('Profissional deletado com sucesso');
+            return reply.send('Profissional deletado com sucesso');
         } catch (error) {
-            reply.status(500).send('Erro ao deletar profissional');
+            return reply.status(500).send('Erro ao deletar profissional');
         }
     }
 
-    professionalsRecommendations = async (req: FastifyRequest, res: FastifyReply) => {
+    professionalsRecommendations = async (req: FastifyRequest<{ Params: { id: number }}>, res: FastifyReply) => {
         try {
-            const { id } = req.params;
+            const id  = req.params.id;
             const recommendations = Professional.getRecommendedProfessionals(id);
             res.send(recommendations);
         } catch (error) {

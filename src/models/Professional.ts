@@ -165,9 +165,9 @@ class Professional {
     });
   }
 
-  async getRecommendedProfessionals (professionalId: string): Promise<string[]> {
+  async getRecommendedProfessionals (professionalId: number): Promise<string[]> {
     const graph = await buildSimilarityGraph();
-    const similarProfessionals = graph[professionalId];
+    const similarProfessionals = graph[professionalId.toString()];
     
     if (!similarProfessionals) {
       return [];

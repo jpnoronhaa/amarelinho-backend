@@ -67,6 +67,16 @@ class UserController {
             return res.code(400).send({ message: 'Erro ao atualizar token de notificação' });
         }
     }
+
+    getUserById = async (req: FastifyRequest<{ Params: { id: number } }>, res: FastifyReply) => {
+        const userId = req.params.id;
+        try {
+            const user = await User.findOne({ id: userId });
+            return res.code(200).send(user);
+        } catch (error) {
+            return res.code(400).send({ message: 'Erro ao buscar usuário' });
+        }
+    }
 }
 
 export default new UserController();

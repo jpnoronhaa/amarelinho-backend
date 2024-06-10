@@ -207,6 +207,7 @@ export async function professionalRoutes(app: FastifyInstance) {
           }
         }
       }
-    }
-  }, ProfessionalController.professionalsRecommendations);
+    },
+    handler: ProfessionalController.professionalsRecommendations
+  });
 }

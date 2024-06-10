@@ -7,7 +7,7 @@ class CategoryController {
         try {
             const category = req.body;
             const createdCategory = await Category.create(category);
-            return res.code(201).send({ message: 'Categoria criada com sucesso', category: createdCategory });
+            return res.code(201).send(JSON.stringify({ message: 'Categoria criada com sucesso', category: createdCategory }));
         } catch (error) {
             return res.code(400).send({ message: error.message });
         }

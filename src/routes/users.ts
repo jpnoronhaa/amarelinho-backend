@@ -115,4 +115,39 @@ export async function usersRoutes(app: FastifyInstance) {
     },
     handler: UserController.registerNotificationToken,
   });
+
+  app.get('/:id', {
+    schema: {
+      summary: 'Busca um usuário pelo ID',
+      tags: ['Users'],
+      params: {
+        type: 'object',
+        properties: {
+          id: { type: 'number' }
+        }
+      },
+      response: {
+        200: {
+          description: 'Usuário encontrado',
+          type: 'object',
+          properties: {
+            id: { type: 'number' },
+            name: { type: 'string' },
+            email: { type: 'string' },
+            isActive: { type: 'boolean' },
+            created_at: { type: 'string', format: 'date-time' },
+            updated_at: { type: 'string', format: 'date-time' }
+          }
+        },
+        404: {
+          description: 'Usuário não encontrado',
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
+      }
+    },
+    handler: UserController.getUserById
+  });
 }
