@@ -76,7 +76,16 @@ export async function usersRoutes(app: FastifyInstance) {
           description: 'Login realizado com sucesso',
           type: 'object',
           properties: {
-            token: { type: 'string' }
+            token: { type: 'string' },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                name: { type: 'string' },
+                email: { type: 'string' },
+                isActive: { type: 'boolean' }
+              }
+            }
           }
         },
         401: {
