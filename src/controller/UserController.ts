@@ -50,8 +50,13 @@ class UserController {
             const token = jwt.sign({ id: user.id }, env.JWT_SECRET, {
                 expiresIn: env.JWT_EXPIRES_IN
             });
-
-            return res.code(200).send({ token });
+            
+            console.log(user);
+            //usuario sem a senha
+            delete user.password;
+            delete user.created_at;
+            delete user.updated_at;
+            return res.code(200).send({ token: token, user: user });
         } catch (error) {
             return res.code(401).send({ message: error.message });
         }
