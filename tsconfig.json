@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "typeRoots": [
+        "./fastify.d.ts",
+      ]
+    }
+  }
+  

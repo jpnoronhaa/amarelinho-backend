@@ -55,16 +55,13 @@ export async function professionalRoutes(app: FastifyInstance) {
             userId: { type: 'number' },
             name: { type: 'string' },
             email: { type: 'string' },
-            password: { type: 'string' },
             isActive: { type: 'boolean' },
             phoneNumber: { type: 'number' },
             description: { type: 'string' },
             categories: {
               type: 'array',
               items: { type: 'object' }
-            },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' }
+            }
           }
         }
       }
@@ -178,4 +175,36 @@ export async function professionalRoutes(app: FastifyInstance) {
       }
     }
   }, ProfessionalController.deleteProfessional);
+
+  app.get('/:id/recommendations', {
+    schema: {
+      summary: 'Recomendação por profissionais',
+      tags: ['Professionals'],
+      response: {
+        200: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              userId: { type: 'number' },
+              name: { type: 'string' },
+              email: { type: 'string' },
+              password: { type: 'string' },
+              isActive: { type: 'boolean' },
+              phoneNumber: { type: 'number' },
+              description: { type: 'string' },
+              categories: {
+                type: 'array',
+                items: { type: 'object' }
+              },
+              created_at: { type: 'string', format: 'date-time' },
+              updated_at: { type: 'string', format: 'date-time' }
+            }
+          }
+        }
+      }
+    },
+    handler: ProfessionalController.professionalsRecommendations
+  });
 }
