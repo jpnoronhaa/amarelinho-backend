@@ -13,7 +13,7 @@ app.register(cors, {
 // Iniciar o servidor HTTP e WebSocket
 const start = async () => {
   try {
-    await app.listen({ port: env.PORT });
+    await app.listen({ port: env.PORT, host: '0.0.0.0' });
     console.log('HTTP server and WebSocket server listening on port ' + env.PORT);
   } catch (err) {
     app.log.error(err);
