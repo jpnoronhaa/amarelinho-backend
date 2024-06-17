@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import User, { IUser } from "../models/User";
 import { env } from '../env';
