@@ -20,15 +20,6 @@ const loginSchema = {
   required: ['email', 'password'],
 };
 
-const notificationTokenSchema = {
-  type: 'object',
-  properties: {
-    userId: { type: 'number' },
-    notificationToken: { type: 'string' },
-  },
-  required: ['userId', 'notificationToken'],
-};
-
 export async function usersRoutes(app: FastifyInstance) {
   app.post('/register', {
     schema: {
@@ -76,19 +67,11 @@ export async function usersRoutes(app: FastifyInstance) {
           description: 'Login realizado com sucesso',
           type: 'object',
           properties: {
-            token: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                id: { type: 'number' },
-                name: { type: 'string' },
-                email: { type: 'string' },
-                isActive: { type: 'boolean' }
-              }
-            }
+            message: { type: 'string' },
+            token: { type: 'string' }
           }
         },
-        401: {
+        400: {
           description: 'Credenciais inválidas',
           type: 'object',
           properties: {
@@ -98,65 +81,5 @@ export async function usersRoutes(app: FastifyInstance) {
       }
     },
     handler: UserController.login,
-  });
-
-  app.post('/notification-token', {
-    schema: {
-      summary: 'Atualiza o token de notificação do usuário',
-      tags: ['Users'],
-      body: notificationTokenSchema,
-      response: {
-        200: {
-          description: 'Token de notificação atualizado com sucesso',
-          type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
-        },
-        400: {
-          description: 'Erro ao atualizar token de notificação',
-          type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
-    },
-    handler: UserController.registerNotificationToken,
-  });
-
-  app.get('/:id', {
-    schema: {
-      summary: 'Busca um usuário pelo ID',
-      tags: ['Users'],
-      params: {
-        type: 'object',
-        properties: {
-          id: { type: 'number' }
-        }
-      },
-      response: {
-        200: {
-          description: 'Usuário encontrado',
-          type: 'object',
-          properties: {
-            id: { type: 'number' },
-            name: { type: 'string' },
-            email: { type: 'string' },
-            isActive: { type: 'boolean' },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' }
-          }
-        },
-        404: {
-          description: 'Usuário não encontrado',
-          type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
-    },
-    handler: UserController.getUserById
   });
 }

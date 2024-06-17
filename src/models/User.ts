@@ -8,17 +8,11 @@ export interface IUser {
   isActive: boolean;
   created_at: Date;
   updated_at: Date;
-  notificationToken?: string;
 }
 
 interface IUserQuery {
   id?: number;
   email?: string;
-  password?: string;
-  isActive?: boolean;
-  created_at?: Date;
-  updated_at?: Date;
-  notificationToken?: string;
 }
 
 class User {
@@ -39,15 +33,10 @@ class User {
 
   async findOne(query: IUserQuery): Promise<IUser> {
     return knex("users").where(query)
-      .select("id", "name", "email", "password", "isActive", "created_at", "updated_at", "notificationToken") // Incluindo o token de notificação na consulta
+      .select("id", "name", "email", "isActive", "created_at", "updated_at")
       .first();
   }
 
-  async updateNotificationToken(userId: number, token: string): Promise<void> {
-    await knex("users")
-      .where({ id: userId })
-      .update({ notificationToken: token, updated_at: new Date() });
-  }
 }
 
 export default new User();

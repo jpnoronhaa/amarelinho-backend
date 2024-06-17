@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
 //apenas para fins de teste, não usada na realidade
 async function sendReviewNotification(req, res) {
