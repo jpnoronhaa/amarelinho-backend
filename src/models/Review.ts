@@ -45,21 +45,21 @@ class Review {
     }
 
     async findOne(id: number): Promise<IReview> {
-        const review = await knex('reviews')
+        const review = await knex<IReview>('reviews')
             .where('reviews.id', id)
             .join('users as u', 'u.id', 'reviews.user_id')
-            .join('users as p', 'p.id', 'reviews.professional_id')
+            .join('professional as p', 'p.id', 'reviews.professional_id')
+            .leftJoin('users as up', 'up.id', 'p.userId')
+            .orderBy('reviews.created_at', 'desc')
             .select(
-                'reviews.id',
-                'u.name as user_name', 
-                'p.name as professional_name',  
-                'reviews.rating',
-                'reviews.comment',
-                'reviews.images',  
-                'reviews.created_at',
-                'reviews.updated_at'
-            )
-            .first();
+              'reviews.id',
+              'u.name as user_name',
+              'up.name as professional_name',
+              'reviews.rating',
+              'reviews.comment',
+              'reviews.images',
+              'reviews.updated_at'
+            ).first();
     
         if (!review) {
             throw new Error('Avaliação não encontrada');
@@ -75,16 +75,17 @@ class Review {
     async findByProfessional(professionalId: number): Promise<IReview[]> {
         const reviews = await knex<IReview>('reviews').where({ professional_id: professionalId })
         .join('users as u', 'u.id', 'reviews.user_id')
-        .join('users as p', 'p.id', 'reviews.professional_id')
+        .join('professional as p', 'p.id', 'reviews.professional_id')
+        .leftJoin('users as up', 'up.id', 'p.userId')
+        .orderBy('reviews.created_at', 'desc')
         .select(
-            'reviews.id',
-            'u.name as user_name',
-            'p.name as professional_name',
-            'reviews.rating',
-            'reviews.comment',
-            'reviews.images',
-            'reviews.created_at',
-            'reviews.updated_at'
+          'reviews.id',
+          'u.name as user_name',
+          'up.name as professional_name',
+          'reviews.rating',
+          'reviews.comment',
+          'reviews.images',
+          'reviews.updated_at'
         );
 
         if (!reviews) {
@@ -103,18 +104,19 @@ class Review {
     async findByUser(userId: number): Promise<IReview[]> {
         const reviews = await knex<IReview>('reviews').where({ user_id: userId })
         .join('users as u', 'u.id', 'reviews.user_id')
-        .join('users as p', 'p.id', 'reviews.professional_id')
+        .join('professional as p', 'p.id', 'reviews.professional_id')
+        .leftJoin('users as up', 'up.id', 'p.userId')
+        .orderBy('reviews.created_at', 'desc')
         .select(
-            'reviews.id',
-            'u.name as user_name',
-            'p.name as professional_name',
-            'reviews.rating',
-            'reviews.comment',
-            'reviews.images',
-            'reviews.created_at',
-            'reviews.updated_at'
+          'reviews.id',
+          'u.name as user_name',
+          'up.name as professional_name',
+          'reviews.rating',
+          'reviews.comment',
+          'reviews.images',
+          'reviews.updated_at'
         );
-
+        
         if (!reviews) {
             throw new Error('Avaliações não encontradas');
         }
@@ -130,43 +132,45 @@ class Review {
 
     async findAll(): Promise<IReview[]> {
         const reviews = await knex<IReview>('reviews')
-        .join('users as u', 'u.id', 'reviews.user_id')
-        .join('users as p', 'p.id', 'reviews.professional_id')
-        .select(
+          .join('users as u', 'u.id', 'reviews.user_id')
+          .join('professional as p', 'p.id', 'reviews.professional_id')
+          .leftJoin('users as up', 'up.id', 'p.userId')
+          .orderBy('reviews.created_at', 'desc')
+          .select(
             'reviews.id',
             'u.name as user_name',
-            'p.name as professional_name',
+            'up.name as professional_name',
             'reviews.rating',
             'reviews.comment',
             'reviews.images',
-            'reviews.created_at',
             'reviews.updated_at'
-        );
-
-        if (!reviews) {
-            throw new Error('Avaliações não encontradas');
+          );
+      
+        if (!reviews || reviews.length === 0) {
+          throw new Error('Avaliações não encontradas');
         }
-
+      
         reviews.forEach(review => {
-            if (typeof review.images === 'string') {
-                review.images = JSON.parse(review.images);
-            }
+          if (typeof review.images === 'string') {
+            review.images = JSON.parse(review.images);
+          }
         });
-
+      
         return reviews;
     }
-
+      
     async update(id: number, review: IUpdateReview): Promise<IReview> {
         const now = new Date();
         const updatedReview = {
             ...review,
-            updated_at: now,
+            updated_at: now
         };
         const [updatedReviewId] = await knex<IReview>('reviews').where({ id }).update(updatedReview).returning('id');
+
         if (!updatedReviewId) {
             throw new Error('Erro ao atualizar avaliação');
         }
-        return this.findOne(updatedReviewId.id!);
+        return this.findOne(updatedReviewId.id);
     }
 
     async delete(id: number): Promise<void> {

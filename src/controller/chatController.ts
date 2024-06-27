@@ -47,7 +47,6 @@ export const handleConnection = (connection, request: FastifyRequest<{ Querystri
     const decoded = jwt.verify(token, SECRET_KEY) as { id: number; name: string };
     const userId = decoded.id;
 
-    console.log(`Usuário conectado ao chat: ${userId}`);
     userConnections.set(userId, connection);
 
     (async () => {
@@ -58,7 +57,6 @@ export const handleConnection = (connection, request: FastifyRequest<{ Querystri
 
     connection.on('message', async (message: string) => {
       const parsedMessage = JSON.parse(message);
-      console.log('Mensagem recebida:', parsedMessage);
 
       if (parsedMessage.type === 'send_message') {
         const { receiverId, content } = parsedMessage;

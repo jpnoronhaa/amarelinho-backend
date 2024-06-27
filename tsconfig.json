@@ -2,7 +2,9 @@
     "compilerOptions": {
       "typeRoots": [
         "./fastify.d.ts",
-      ]
+      ],
+      "resolveJsonModule": true,
+      "esModuleInterop": true
     }
   }
   

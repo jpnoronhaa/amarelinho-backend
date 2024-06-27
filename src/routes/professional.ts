@@ -18,7 +18,7 @@ export async function professionalRoutes(app: FastifyInstance) {
               email: { type: 'string' },
               password: { type: 'string' },
               isActive: { type: 'boolean' },
-              phoneNumber: { type: 'number' },
+              phoneNumber: { type: 'string' },
               description: { type: 'string' },
               categories: {
                 type: 'array',
@@ -56,7 +56,7 @@ export async function professionalRoutes(app: FastifyInstance) {
             name: { type: 'string' },
             email: { type: 'string' },
             isActive: { type: 'boolean' },
-            phoneNumber: { type: 'number' },
+            phoneNumber: { type: 'string' },
             description: { type: 'string' },
             categories: {
               type: 'array',
@@ -77,7 +77,7 @@ export async function professionalRoutes(app: FastifyInstance) {
         required: ['userId', 'phoneNumber', 'description'],
         properties: {
           userId: { type: 'number' },
-          phoneNumber: { type: 'number' },
+          phoneNumber: { type: 'string' },
           description: { type: 'string' },
           categories: {
             type: 'array',
@@ -119,7 +119,7 @@ export async function professionalRoutes(app: FastifyInstance) {
       body: {
         type: 'object',
         properties: {
-          phoneNumber: { type: 'number' },
+          phoneNumber: { type: 'string' },
           description: { type: 'string' },
           categories: {
             type: 'array',
@@ -192,7 +192,7 @@ export async function professionalRoutes(app: FastifyInstance) {
               email: { type: 'string' },
               password: { type: 'string' },
               isActive: { type: 'boolean' },
-              phoneNumber: { type: 'number' },
+              phoneNumber: { type: 'string' },
               description: { type: 'string' },
               categories: {
                 type: 'array',

@@ -12,6 +12,12 @@ async function getProfessionalDetails(professional: any): Promise<IProfessional>
     .avg('rating as average_rating')
     .first();
 
+  // I want to round the average rating to the nearest 1 decimal place
+  const averageRating = reviews?.average_rating;
+  if (averageRating) {
+    reviews.average_rating = Math.round(averageRating * 10) / 10;
+  }
+
   const profilePicture = await knex('user_images')
     .where('user_id', professional.userId)
     .select('image_path')

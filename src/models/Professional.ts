@@ -5,7 +5,7 @@ import { getProfessionalDetails } from '../utils/getProfessionalDetails';
 
 export interface ICreateProfessional {
   userId: number;
-  phoneNumber: number;
+  phoneNumber: string;
   description: string;
   categories?: number[];
   notificationToken?: string;
@@ -18,7 +18,7 @@ export interface IProfessional {
   email: string;
   password: string;
   isActive: boolean;
-  phoneNumber: number;
+  phoneNumber: string;
   description: string;
   notificationToken?: string;
   categories?: ICategory[];
@@ -30,7 +30,7 @@ export interface IProfessional {
 }
 
 export interface IUpdateProfessional {
-  phoneNumber?: number;
+  phoneNumber?: string;
   description?: string;
   categories?: number[];
 }
@@ -189,6 +189,27 @@ class Professional {
       .map(([id]) => id);
 
     return sortedProfessionals;
+  }
+
+  async getRecommendedProfessionalDetails(professionalId: number): Promise<IProfessional[]> {
+    const recommendedIds = await this.getRecommendedProfessionals(professionalId);
+
+    const recommendedProfessionals = await knex('professional')
+      .join('users', 'users.id', 'professional.userId')
+      .whereIn('professional.id', recommendedIds)
+      .select(
+        'professional.id',
+        'professional.phoneNumber',
+        'professional.description',
+        'professional.created_at',
+        'professional.updated_at',
+        'users.id as userId',
+        'users.name',
+        'users.email',
+        'users.isActive'
+      );
+
+    return Promise.all(recommendedProfessionals.map(getProfessionalDetails));
   }
 }
 
