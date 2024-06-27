@@ -33,7 +33,7 @@ class ReviewController {
                 }
             }
 
-            return res.code(201).send(JSON.stringify({ message: 'Avaliação criada com sucesso', review: createdReview }));
+            return res.code(201).header('Content-Type', 'application/json').send(JSON.stringify({ message: 'Avaliação criada com sucesso', review: createdReview }));
         } catch (error) {
             return res.code(400).send({ message: error.message });
         }
@@ -96,7 +96,8 @@ class ReviewController {
             if (!updatedReview) {
                 return res.status(404).send('Avaliação não encontrada');
             }
-            return res.send(updatedReview);
+            console.log(updatedReview);
+            return res.header('Content-Type', 'application/json').send(JSON.stringify(updatedReview));
         } catch (error) {
             return res.status(500).send('Erro ao atualizar a avaliação');
         }

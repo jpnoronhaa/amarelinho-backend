@@ -13,7 +13,7 @@ class ProfessionalController {
                 message: 'Profissional criado com sucesso, id:' + createdProfessional.id,
                 professional: createdProfessional
             });
-            return res.code(201).send(stringify);
+            return res.code(201).header('Content-Type', 'application/json').send(stringify);
         } catch (error) {
             return res.code(400).send({ message: error.message });
         }
@@ -77,8 +77,9 @@ class ProfessionalController {
     professionalsRecommendations = async (req: FastifyRequest<{ Params: { id: number }}>, res: FastifyReply) => {
         try {
             const id  = req.params.id;
-            const recommendations = Professional.getRecommendedProfessionals(id);
-            res.send(recommendations);
+            const recommendations = await Professional.getRecommendedProfessionalDetails(id);
+            const formattedRecommendations = recommendations.map(formatProfessional);
+            return res.header('Content-Type', 'application/json').send(JSON.stringify(formattedRecommendations));
         } catch (error) {
             res.status(500).send('Erro ao recomendar profissionais');
         }
