@@ -166,7 +166,7 @@ class Review {
             updated_at: now
         };
         const [updatedReviewId] = await knex<IReview>('reviews').where({ id }).update(updatedReview).returning('id');
-        console.log(updatedReviewId);
+
         if (!updatedReviewId) {
             throw new Error('Erro ao atualizar avaliação');
         }

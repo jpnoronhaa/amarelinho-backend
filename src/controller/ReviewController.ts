@@ -27,9 +27,8 @@ class ReviewController {
             
                 try {
                     await admin.messaging().send(payload);
-                    console.log("Mensagem enviada com sucesso");
                 } catch (error) {
-                    console.log('Erro ao enviar notificação', error);
+                    console.error('Erro ao enviar notificação', error);
                 }
             }
 
@@ -96,7 +95,7 @@ class ReviewController {
             if (!updatedReview) {
                 return res.status(404).send('Avaliação não encontrada');
             }
-            console.log(updatedReview);
+
             return res.header('Content-Type', 'application/json').send(JSON.stringify(updatedReview));
         } catch (error) {
             return res.status(500).send('Erro ao atualizar a avaliação');
