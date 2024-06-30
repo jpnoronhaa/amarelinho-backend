@@ -22,7 +22,7 @@ const upload = multer({
 
 export async function userImagesRoutes(app: FastifyInstance) {
   app.get(
-    "/", 
+    '/', 
     {
       schema: {
         summary: 'Obtém a imagem de usuário',
@@ -67,49 +67,51 @@ export async function userImagesRoutes(app: FastifyInstance) {
   );
 
   app.post(
-    "/",
+    '/',
     {
-      preHandler: upload.single("image"),
+      preHandler: upload.single('image'),
       schema: {
         summary: 'Cria uma nova imagem de usuário',
         tags: ['User Images'],
         consumes: ['multipart/form-data'],
-        body: {
-          type: 'object',
-          required: ['user_id'],
-          properties: {
-            user_id: { type: 'number' },
-            image: { type: 'string', format: 'binary' }
-          }
-        },
         response: {
           201: {
             description: 'Imagem criada com sucesso',
             type: 'object',
             properties: {
               message: { type: 'string' },
-              image: { type: 'object' }
-            }
+              image: { type: 'object' },
+            },
           },
           400: {
             description: 'Request inválido',
             type: 'object',
             properties: {
-              message: { type: 'string' }
-            }
-          }
-        }
-      }
-    }, // Middleware de multer para upload de arquivo
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
     async (request, reply) => {
+      // Validação manual dos campos obrigatórios
+      const { user_id } = request.body;
+      const file = request.file;
+
+      if (!user_id || !file) {
+        return reply.code(400).send({
+          message: "Request inválido: user_id e arquivo de imagem são obrigatórios",
+        });
+      }
+
       await UserImagesController.createImage(request as any, reply);
     }
   );
 
   app.put(
-    "/:id",
+    '/:id',
     {
-      preHandler: upload.single("image"),
+      preHandler: upload.single('image'),
       schema: {
         summary: 'Atualiza uma imagem de usuário',
         tags: ['User Images'],
@@ -117,14 +119,8 @@ export async function userImagesRoutes(app: FastifyInstance) {
         params: {
           type: 'object',
           properties: {
-            id: { type: 'number' }
-          }
-        },
-        body: {
-          type: 'object',
-          properties: {
-            image: { type: 'string', format: 'binary' }
-          }
+            id: { type: 'number' },
+          },
         },
         response: {
           200: {
@@ -132,52 +128,66 @@ export async function userImagesRoutes(app: FastifyInstance) {
             type: 'object',
             properties: {
               message: { type: 'string' },
-              image: { type: 'object' }
-            }
+              image: { type: 'object' },
+            },
           },
           400: {
             description: 'Request inválido',
             type: 'object',
             properties: {
-              message: { type: 'string' }
-            }
-          }
-        }
-      }
-    }, // Middleware de multer para upload de arquivo
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
     async (request, reply) => {
+      // Validação manual dos campos obrigatórios
+      const { id } = request.params;
+      const file = request.file;
+
+      if (!file) {
+        return reply.code(400).send({
+          message: "Request inválido: arquivo de imagem é obrigatório",
+        });
+      }
+
       await UserImagesController.updateImage(request as any, reply);
     }
   );
 
-  app.delete("/:id", {
-    schema: {
-      summary: 'Deleta uma imagem de usuário',
-      tags: ['User Images'],
-      params: {
-        type: 'object',
-        properties: {
-          id: { type: 'number' }
-        }
-      },
-      response: {
-        200: {
-          description: 'Imagem deletada com sucesso',
+  app.delete(
+    '/:id',
+    {
+      schema: {
+        summary: 'Deleta uma imagem de usuário',
+        tags: ['User Images'],
+        params: {
           type: 'object',
           properties: {
-            message: { type: 'string' }
-          }
+            id: { type: 'number' },
+          },
         },
-        404: {
-          description: 'Imagem não encontrada',
-          type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
+        response: {
+          200: {
+            description: 'Imagem deletada com sucesso',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
+          },
+          404: {
+            description: 'Imagem não encontrada',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      await UserImagesController.deleteImage(request as DeleteImageRequest, reply);
     }
-  }, async (request, reply) => {
-    await UserImagesController.deleteImage(request as DeleteImageRequest, reply);
-  });
+  );
 }
