@@ -84,10 +84,10 @@ class UserImagesController {
       });
 
       req.log.info(`Imagem criada: ${createdImage.id}`);
-      return res.code(201).send({
+      return res.code(201).header('Content-Type', 'application/json').send(JSON.stringify({
         message: "Imagem criada com sucesso",
         image: createdImage,
-      });
+      }));
     } catch (error) {
       console.error("Error creating image:", error);
       return res.code(500).send({
